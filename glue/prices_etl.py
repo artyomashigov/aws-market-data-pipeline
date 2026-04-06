@@ -8,6 +8,9 @@ sc = SparkContext()
 glueContext = GlueContext(sc)
 spark = glueContext.spark_session
 
+# repair partitions so new daily data is visible before reading
+spark.sql("MSCK REPAIR TABLE market_pipeline_dev.prices_prices")
+
 # read raw data from glue catalog
 df = glueContext.create_dynamic_frame.from_catalog(
     database="market_pipeline_dev",
