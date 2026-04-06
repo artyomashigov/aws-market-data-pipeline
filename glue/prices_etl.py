@@ -1,7 +1,8 @@
 import sys
 from awsglue.context import GlueContext
 from pyspark.context import SparkContext
-from pyspark.sql.functions import explode, col, coalesce
+from pyspark.sql.functions import explode, col, coalesce, row_number
+from pyspark.sql.window import Window
 
 # init
 sc = SparkContext()
@@ -17,10 +18,11 @@ df = glueContext.create_dynamic_frame.from_catalog(
     table_name="prices_prices"
 ).toDF()
 
-# flatten array
+# flatten nested data array, each element becomes one row
 df_flat = df.withColumn("item", explode("data"))
 
 # select clean columns and normalize close
+# close is normalized from struct{double, int} to a single double
 df_clean = df_flat.select(
     col("symbol"),
     col("extract_date"),
@@ -32,7 +34,11 @@ df_clean = df_flat.select(
     col("item.volume").cast("bigint").alias("volume")
 )
 
-# write clean parquet
-df_clean.write.mode("overwrite").parquet(
+# deduplicate: keep one row per symbol + date, taking most recent extract
+window = Window.partitionBy("symbol", "date").orderBy(col("extract_date").desc())
+df_dedup = df_clean.withColumn("rn", row_number().over(window)).filter(col("rn") == 1).drop("rn")
+
+# write clean deduplicated parquet (overwrite prevents duplicate rows on reruns)
+df_dedup.write.mode("overwrite").parquet(
     "s3://artyom-market-pipeline-dev/curated/prices/"
 )
