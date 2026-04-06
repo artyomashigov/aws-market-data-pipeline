@@ -1,0 +1,6 @@
+# Lambda Environment Variables
+# Copy these into your Lambda function under Environment Variables
+
+BUCKET_NAME=your-s3-bucket-name
+FMP_API_KEY=your_financial_modeling_prep_api_key
+SYMBOLS=AAPL,MSFT,NVDA,AMZN,GOOGL
