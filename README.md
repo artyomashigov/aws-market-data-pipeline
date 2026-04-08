@@ -4,6 +4,8 @@ End-to-end serverless data pipeline that ingests stock market data from an exter
 
 This project reflects production-style cloud data engineering architecture including ingestion, transformation, orchestration, automation, and reporting.
 
+[📄 Full project walkthrough on Medium](https://medium.com/@artyomashigov/end-to-end-aws-data-pipeline-lambda-glue-step-functions-and-athena-in-practice-b5a803b003af)
+
 ---
 
 ## Table of Contents
