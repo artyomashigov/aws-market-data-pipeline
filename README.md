@@ -256,7 +256,7 @@ The final Power BI dashboard was built from the curated Athena dataset and inclu
 - **Price trend (last 90 days)** — line chart by symbol
 - **Trading volume comparison** — bar chart across all 5 symbols
 
-> ![Power BI dashboard screenshot](screenshots/dashboard.png)
+![Power BI dashboard screenshot](screenshots/dashboard.png)
 
 ---
 
